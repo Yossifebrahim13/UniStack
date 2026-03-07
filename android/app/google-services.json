@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "854425800246",
+    "project_id": "unistack-f3bc5",
+    "storage_bucket": "unistack-f3bc5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854425800246:android:385470c938219ee8f71297",
+        "android_client_info": {
+          "package_name": "com.example.fastflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwaIODAHWm77yfV6Ty-05bkORS8mg9NbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
