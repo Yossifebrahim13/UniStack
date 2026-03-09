@@ -6,17 +6,12 @@ import 'package:get/route_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(UniStack());
+  runApp(const UniStack());
 }
 
-class UniStack extends StatefulWidget {
+class UniStack extends StatelessWidget {
   const UniStack({super.key});
 
-  @override
-  State<UniStack> createState() => _UniStackState();
-}
-
-class _UniStackState extends State<UniStack> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
