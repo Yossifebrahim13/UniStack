@@ -1,5 +1,6 @@
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/onboarding_view.dart';
+import 'package:UniStack/splash_view.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class AppRoutes {
@@ -10,10 +11,10 @@ class AppRoutes {
   static const String onBoarding = "/onBoarding";
 
   static List<GetPage> pages = [
-    // GetPage(
-    //   name: splash,
-    //   page: () => const SplashScreen(),
-    // ),
+    GetPage(
+      name: splash,
+      page: () => const SplashView(),
+    ),
     GetPage(name: onBoarding, page: () => const OnboardingView()),
     // GetPage(
     //   name: login,

@@ -1,6 +1,7 @@
 import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
+import 'package:UniStack/core/utils/pref_helpers.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/shared/widgets/dot_indecator.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   void nextPage() {
     if (pageIndex == pages.length - 1) {
       Get.offAllNamed(AppRoutes.home);
+      PrefHelpers().saveFirstTime(false);
     } else {
       _controller.nextPage(
         duration: const Duration(milliseconds: 400),
@@ -72,7 +74,10 @@ class _OnboardingViewState extends State<OnboardingView> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () => Get.offAllNamed(AppRoutes.home),
+                  onPressed: () {
+                    Get.offAllNamed(AppRoutes.home);
+                    PrefHelpers().saveFirstTime(false);
+                  },
                   child: const Text(
                     "Skip",
                     style: TextStyle(
