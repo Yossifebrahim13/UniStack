@@ -2,7 +2,6 @@ import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:UniStack/core/utils/pref_helpers.dart';
-import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/shared/widgets/dot_indecator.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -43,7 +42,7 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   void nextPage() {
     if (pageIndex == pages.length - 1) {
-      Get.offAllNamed(AppRoutes.home);
+      Get.offAllNamed(AppRoutes.login);
       PrefHelpers().saveFirstTime(false);
     } else {
       _controller.nextPage(
@@ -75,7 +74,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    Get.offAllNamed(AppRoutes.home);
+                    Get.offAllNamed(AppRoutes.login);
                     PrefHelpers().saveFirstTime(false);
                   },
                   child: const Text(

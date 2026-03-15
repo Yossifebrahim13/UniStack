@@ -12,7 +12,20 @@
           "package_name": "com.example.fastflow"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "854425800246-j7cn3kfplpu568v7eidfg239160crgtt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fastflow",
+            "certificate_hash": "283be1d8593527bb5783d50627d0e9d008f32d5a"
+          }
+        },
+        {
+          "client_id": "854425800246-feijifgu80dp1op1snq9skbmj3qkh2ul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCwaIODAHWm77yfV6Ty-05bkORS8mg9NbI"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854425800246-feijifgu80dp1op1snq9skbmj3qkh2ul.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "854425800246-e93ksans4rlfbr16atqosnk5gsbn7jse.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fastflow"
+              }
+            }
+          ]
         }
       }
     }

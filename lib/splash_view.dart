@@ -1,5 +1,4 @@
 import 'package:UniStack/core/utils/app_colors.dart';
-import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:UniStack/shared/functions/first_time_check.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,9 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () => firstTimeCheck());
+    Future.delayed(const Duration(seconds: 3), () async {
+      await firstTimeCheck();
+    });
   }
 
   @override
