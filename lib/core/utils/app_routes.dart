@@ -1,3 +1,4 @@
+import 'package:UniStack/features/auth/view/login_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/onboarding_view.dart';
 import 'package:UniStack/splash_view.dart';
@@ -11,19 +12,9 @@ class AppRoutes {
   static const String onBoarding = "/onBoarding";
 
   static List<GetPage> pages = [
-    GetPage(
-      name: splash,
-      page: () => const SplashView(),
-    ),
+    GetPage(name: splash, page: () => const SplashView()),
     GetPage(name: onBoarding, page: () => const OnboardingView()),
-    // GetPage(
-    //   name: login,
-    //   page: () => const LoginScreen(),
-    // ),
-    // GetPage(
-    //   name: register,
-    //   page: () => const RegisterScreen(),
-    // ),
+    GetPage(name: login, page: () => const LoginView()),
     GetPage(name: home, page: () => const HomeView()),
   ];
 }
