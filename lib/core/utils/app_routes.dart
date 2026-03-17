@@ -1,3 +1,4 @@
+import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/onboarding_view.dart';
 import 'package:UniStack/splash_view.dart';
@@ -20,10 +21,10 @@ class AppRoutes {
     //   name: login,
     //   page: () => const LoginScreen(),
     // ),
-    // GetPage(
-    //   name: register,
-    //   page: () => const RegisterScreen(),
-    // ),
+    GetPage(
+      name: signUp,
+      page: () => const SignupView(),
+    ),
     GetPage(name: home, page: () => const HomeView()),
   ];
 }
