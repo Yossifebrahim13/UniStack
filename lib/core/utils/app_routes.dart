@@ -1,4 +1,5 @@
 import 'package:UniStack/features/auth/view/login_view.dart';
+import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/onboarding_view.dart';
 import 'package:UniStack/splash_view.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
     GetPage(name: splash, page: () => const SplashView()),
     GetPage(name: onBoarding, page: () => const OnboardingView()),
     GetPage(name: login, page: () => const LoginView()),
+    GetPage(name: signUp, page: () => const SignupView()),
     GetPage(name: home, page: () => const HomeView()),
   ];
 }
