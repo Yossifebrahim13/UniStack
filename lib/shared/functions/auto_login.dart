@@ -9,20 +9,20 @@ void autoLogin() {
   _authSub?.cancel();
 
   _authSub = FirebaseAuth.instance.authStateChanges().listen((user) async {
-    if (user != null) {
-      await user.reload();
-      final refreshedUser = FirebaseAuth.instance.currentUser;
+    try {
+      if (user != null) {
+        await user.reload();
+        final refreshedUser = FirebaseAuth.instance.currentUser;
 
-      if (refreshedUser != null && refreshedUser.emailVerified) {
-        Get.offAllNamed(AppRoutes.home);
+        if (refreshedUser != null && refreshedUser.emailVerified) {
+          Get.offAllNamed(AppRoutes.home);
+        } else {
+          Get.offAllNamed(AppRoutes.login);
+        }
       } else {
         Get.offAllNamed(AppRoutes.login);
-        Get.snackbar(
-          "Email Not Verified",
-          "Please verify your email before logging in",
-        );
       }
-    } else {
+    } catch (e) {
       Get.offAllNamed(AppRoutes.login);
     }
   });

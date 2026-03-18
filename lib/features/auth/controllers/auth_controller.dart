@@ -1,116 +1,119 @@
-import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/services/auth/auth_service.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:UniStack/core/error/error_handle.dart';
 
 class AuthController extends GetxController {
-  final AuthService _authService = AuthService.instance;
+  static AuthController get instance => Get.find();
 
   final RxBool isLoading = false.obs;
   final RxBool isGoogleLoading = false.obs;
+  final Rxn<User> firebaseUser = Rxn<User>();
 
-  final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
 
   @override
-  void onClose() {
-    fullNameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
+  void onInit() {
+    super.onInit();
+    firebaseUser.bindStream(AuthService.instance.auth.authStateChanges());
   }
 
-  set fullName(String value) {
-    fullNameController.text = value;
-  }
+  /// ========================= SIGN UP ========================= ///
+  Future<void> signUp() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final fullName = fullNameController.text.trim();
 
-  set email(String value) {
-    emailController.text = value;
-  }
-
-  set password(String value) {
-    passwordController.text = value;
-  }
-
-  String get fullName => fullNameController.text.trim();
-  String get email => emailController.text.trim();
-  String get password => passwordController.text.trim();
-
-  Future<void> login() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
+    if (email.isEmpty || password.isEmpty || fullName.isEmpty) {
+      Get.snackbar('Error', 'All fields are required');
+      return;
+    }
 
     try {
-      await _authService.loginWithEmailAndPassword(
+      isLoading.value = true;
+
+      await AuthService.instance.signUpWithEmailAndPassword(
         email: email,
         password: password,
+        fullName: fullName,
       );
-      final user = _authService.getCurrentUser();
-      if (user != null && user.emailVerified) {
-        Get.offAllNamed(AppRoutes.home);
-      }
-      if (user != null && !user.emailVerified) {
-        Get.snackbar("Email Not Verified", "Please verify your email");
-      }
-    } catch (e) {
-      Get.snackbar("Login Failed", "Please try again");
+
+      Get.snackbar(
+        'Success',
+        'Account created successfully. Check your email for verification.',
+      );
+    } on FirebaseAuthException catch (e) {
+      ErrorHandel.handleAuthError(e);
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> signInWithGoogle() async {
-    if (isGoogleLoading.value) return;
-    isGoogleLoading.value = true;
+  /// ========================= LOGIN ========================= ///
+  Future<void> login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      Get.snackbar('Error', 'Email & Password are required');
+      return;
+    }
 
     try {
-      await _authService.signInWithGoogle();
-      final user = _authService.getCurrentUser();
-      if (user != null && user.emailVerified) {
-        Get.offAllNamed(AppRoutes.home);
+      isLoading.value = true;
+
+      await AuthService.instance.loginWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (AuthService.instance.getCurrentUser() != null) {
+        Get.snackbar('Success', 'Logged in successfully');
       }
-      if (user != null && !user.emailVerified) {
-        Get.snackbar("Email Not Verified", "Please verify your email");
-      }
-    } catch (e) {
-      Get.snackbar("Login Failed", "Please try again");
+    } on FirebaseAuthException catch (e) {
+      ErrorHandel.handleAuthError(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// ========================= GOOGLE SIGN IN ========================= ///
+  Future<void> signInWithGoogle() async {
+    try {
+      isGoogleLoading.value = true;
+      await AuthService.instance.signInWithGoogle();
+      Get.snackbar('Success', 'Logged in with Google successfully');
+    } on FirebaseAuthException catch (e) {
+      ErrorHandel.handleAuthError(e);
     } finally {
       isGoogleLoading.value = false;
     }
   }
 
-  Future<void> signUp() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
+  /// ========================= LOGOUT ========================= ///
+  Future<void> logout() async {
+    await AuthService.instance.logout();
+    Get.snackbar('Logged out', 'You have been logged out');
+  }
+
+  /// ========================= RESET PASSWORD ========================= ///
+  Future<void> resetPassword(String email) async {
+    if (email.isEmpty) {
+      Get.snackbar('Error', 'Email is required');
+      return;
+    }
 
     try {
-      await _authService.signUpWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Get.snackbar(
-        "Sign Up Successful",
-        "Verification link has been sent to your email : $email \n please verify your email to login ...",
-      );
-    } catch (e) {
-      Get.snackbar("Sign Up Failed", "Please try again");
-    } finally {
-      isLoading.value = false;
+      await AuthService.instance.sendPasswordResetEmail(email: email);
+      Get.snackbar('Success', 'Password reset email sent');
+    } on FirebaseAuthException catch (e) {
+      ErrorHandel.handleAuthError(e);
     }
   }
 
-  Future<void> logout() async {
-    await _authService.logout();
-    Get.offAllNamed(AppRoutes.login);
-  }
-
-  Future<void> resetPassword() async {
-    await _authService.sendPasswordResetEmail(email: email);
-    Get.snackbar(
-      'Check Your Email',
-      'Password reset link sent to $email',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
+  /// ========================= GET CURRENT USER ========================= ///
+  User? get currentUser => firebaseUser.value;
 }

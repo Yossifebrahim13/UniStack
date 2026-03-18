@@ -18,6 +18,20 @@ class ErrorHandel {
           snackPosition: SnackPosition.BOTTOM,
         );
         break;
+      case 'email-already-in-use':
+        Get.snackbar(
+          'Email Already In Use',
+          'An account already exists with this email.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        break;
+      case "The supplied auth credential is incorrect, malformed or has expired.":
+        Get.snackbar(
+          'Invalid Credential',
+          'The supplied authentication secret was invalid.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        break;
       default:
         Get.snackbar(
           'Error',

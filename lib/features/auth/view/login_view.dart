@@ -1,8 +1,14 @@
 import 'package:UniStack/core/utils/app_colors.dart';
+import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:UniStack/features/auth/widgets/auth_field.dart';
+import 'package:UniStack/features/auth/widgets/google_btn.dart';
+import 'package:UniStack/features/auth/widgets/auth_btn.dart';
+import 'package:UniStack/features/auth/controllers/auth_controller.dart';
+import 'package:UniStack/shared/widgets/capy_rights.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -12,6 +18,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final AuthController authController = Get.put(AuthController());
   bool isPasswordHidden = true;
 
   @override
@@ -65,115 +73,136 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ],
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Welcome back",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    Gap(screenHeight * 0.01),
-                    const Text(
-                      "Enter your credentials to access your account",
-                      style: TextStyle(color: AppColors.textSecondary),
-                    ),
-                    Gap(screenHeight * 0.02),
-                    const Text(
-                      "Email",
-                      style: TextStyle(color: AppColors.textPrimary),
-                    ),
-                    Gap(screenHeight * 0.01),
-                    AuthField(
-                      hintText: "johndoe@examble",
-                      icon: Icons.email,
-                      isPass: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your email";
-                        }
-                        if (!value.contains("@")) {
-                          return "Please enter a valid email";
-                        }
-                        if (!value.contains(".")) {
-                          return "Please enter a valid email";
-                        }
-                        return null;
-                      },
-                    ),
-                    Gap(screenHeight * 0.02),
-                    const Text(
-                      "Password",
-                      style: TextStyle(color: AppColors.textPrimary),
-                    ),
-                    Gap(screenHeight * 0.01),
-                    AuthField(
-                      hintText: "********",
-                      icon: Icons.lock,
-                      isPass: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your password";
-                        }
-                        if (value.length < 6) {
-                          return "Password must be at least 6 characters";
-                        }
-                        return null;
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Forgot Password?",
-                            style: TextStyle(color: AppColors.textPrimary),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Gap(screenHeight * 0.02),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          "Sign in",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Welcome back",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                    ),
-                    Gap(screenHeight * 0.05),
-                    Center(child: Text("or continue with google")),
-                    Gap(screenHeight * 0.02),
-                    SizedBox(
-                      child: Row(
+                      Gap(screenHeight * 0.01),
+                      const Text(
+                        "Enter your credentials to access your account",
+                        style: TextStyle(color: AppColors.textSecondary),
+                      ),
+                      Gap(screenHeight * 0.02),
+                      const Text(
+                        "Email",
+                        style: TextStyle(color: AppColors.textPrimary),
+                      ),
+                      Gap(screenHeight * 0.01),
+                      AuthField(
+                        controller: authController.emailController,
+                        hintText: "johndoe@examble",
+                        icon: Icons.email,
+                        isPass: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your email";
+                          }
+                          if (!value.contains("@")) {
+                            return "Please enter a valid email";
+                          }
+                          if (!value.contains(".")) {
+                            return "Please enter a valid email";
+                          }
+                          return null;
+                        },
+                      ),
+                      Gap(screenHeight * 0.02),
+                      const Text(
+                        "Password",
+                        style: TextStyle(color: AppColors.textPrimary),
+                      ),
+                      Gap(screenHeight * 0.01),
+                      AuthField(
+                        controller: authController.passwordController,
+                        hintText: "********",
+                        icon: Icons.lock,
+                        isPass: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your password";
+                          }
+                          if (value.length < 6) {
+                            return "Password must be at least 6 characters";
+                          }
+                          return null;
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Image.asset(
-                            "lib/core/assets/img/google_icon.png",
-                            width: screenWidth * 0.05,
-                            height: screenWidth * 0.05,
-                          ),
                           TextButton(
-                            onPressed: () {},
-                            child: Text("Sign in with Google"),
+                            onPressed: () {
+                              authController.resetPassword(
+                                authController.emailController.text,
+                              );
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(color: AppColors.primary),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                      Gap(screenHeight * 0.02),
+                      Obx(
+                        () => AuthBtn(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              authController.login();
+                            }
+                          },
+                          text: authController.isLoading.value
+                              ? "Logging in..."
+                              : "Login",
+                          isLoading: authController.isLoading.value,
+                        ),
+                      ),
+                      Gap(screenHeight * 0.05),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: AppColors.textPrimary,
+                              thickness: 1,
+                              indent: 10,
+                              endIndent: 10,
+                            ),
+                          ),
+                          Text(
+                            "OR",
+                            style: TextStyle(color: AppColors.textSecondary),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              color: AppColors.textPrimary,
+                              thickness: 1,
+                              indent: 10,
+                              endIndent: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Gap(screenHeight * 0.02),
+                      Obx(
+                        () => googleBtn(
+                          screenHeight,
+                          screenWidth,
+                          authController.signInWithGoogle,
+                          isLoading: authController.isGoogleLoading.value,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Gap(screenHeight * 0.05),
@@ -182,14 +211,19 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   Text("Don't have an account ?"),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.offAllNamed(AppRoutes.signUp);
+                    },
                     child: Text(
                       "Sign UP",
-                      style: TextStyle(color: AppColors.textPrimary),
+                      style: TextStyle(color: AppColors.primary),
                     ),
                   ),
                 ],
               ),
+              Gap(screenHeight * 0.01),
+              capyRights(),
+              Gap(screenHeight * 0.05),
             ],
           ),
         ),

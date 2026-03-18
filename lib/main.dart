@@ -20,7 +20,7 @@ class UniStack extends StatelessWidget {
     return GetMaterialApp(
       title: 'UniStack',
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.splash,
       getPages: AppRoutes.pages,
     );
   }
