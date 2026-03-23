@@ -1,4 +1,5 @@
 import 'package:UniStack/core/error/error_handle.dart';
+import 'package:UniStack/core/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -42,7 +43,7 @@ class AuthService {
         );
       }
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -69,17 +70,22 @@ class AuthService {
       if (user != null) {
         await user.updateDisplayName(fullName);
 
-        await _firestore.collection('users').doc(user.uid).set({
-          'uid': user.uid,
-          'fullName': fullName,
-          'email': email,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
+        final userModel = UserModel(
+          id: user.uid,
+          name: fullName,
+          email: email,
+          createdAt: DateTime.now(),
+        );
+
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userModel.toFirestore());
       }
 
       await sendEmailVerification();
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     }
   }
 
@@ -105,12 +111,17 @@ class AuthService {
         final doc = await _firestore.collection('users').doc(user.uid).get();
 
         if (!doc.exists) {
-          await _firestore.collection('users').doc(user.uid).set({
-            'uid': user.uid,
-            'fullName': user.displayName ?? '',
-            'email': user.email,
-            'createdAt': FieldValue.serverTimestamp(),
-          });
+          final userModel = UserModel(
+            id: user.uid,
+            name: user.displayName ?? 'anonymous',
+            email: user.email ?? '',
+            createdAt: DateTime.now(),
+          );
+
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .set(userModel.toFirestore());
         }
       }
     } catch (e) {
@@ -148,7 +159,7 @@ class AuthService {
     try {
       await auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     }
   }
 

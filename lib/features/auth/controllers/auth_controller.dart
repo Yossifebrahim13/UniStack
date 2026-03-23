@@ -1,3 +1,4 @@
+import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,7 +47,7 @@ class AuthController extends GetxController {
         'Account created successfully. Check your email for verification.',
       );
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     } finally {
       isLoading.value = false;
     }
@@ -74,7 +75,7 @@ class AuthController extends GetxController {
         Get.snackbar('Success', 'Logged in successfully');
       }
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     } finally {
       isLoading.value = false;
     }
@@ -87,7 +88,7 @@ class AuthController extends GetxController {
       await AuthService.instance.signInWithGoogle();
       Get.snackbar('Success', 'Logged in with Google successfully');
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     } finally {
       isGoogleLoading.value = false;
     }
@@ -97,6 +98,7 @@ class AuthController extends GetxController {
   Future<void> logout() async {
     await AuthService.instance.logout();
     Get.snackbar('Logged out', 'You have been logged out');
+    Get.offAllNamed(AppRoutes.login);
   }
 
   /// ========================= RESET PASSWORD ========================= ///
@@ -110,7 +112,7 @@ class AuthController extends GetxController {
       await AuthService.instance.sendPasswordResetEmail(email: email);
       Get.snackbar('Success', 'Password reset email sent');
     } on FirebaseAuthException catch (e) {
-      ErrorHandel.handleAuthError(e);
+      ErrorHandle.handleAuthError(e);
     }
   }
 

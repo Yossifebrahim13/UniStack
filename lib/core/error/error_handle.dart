@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-class ErrorHandel {
+class ErrorHandle {
   static void handleAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':
@@ -39,5 +39,9 @@ class ErrorHandel {
           snackPosition: SnackPosition.BOTTOM,
         );
     }
+  }
+
+  static void handleError(Exception e) {
+    Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
   }
 }
