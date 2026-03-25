@@ -12,7 +12,7 @@ class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> loginWithEmailAndPassword({
+  Future<UserModel?> loginWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -23,25 +23,23 @@ class AuthService {
       );
 
       final user = credential.user;
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
 
-      if (user != null) {
-        if (!user.emailVerified) {
-          await sendEmailVerification();
-          await auth.signOut();
+      final userModel = UserModel.fromFirestore(userDoc);
+      if (!user.emailVerified) {
+        await sendEmailVerification();
+        await auth.signOut();
 
-          Get.snackbar(
-            'Email Not Verified',
-            'Please verify your email before logging in.',
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        }
-      } else {
         Get.snackbar(
-          'Error',
-          'Login failed. Please try again.',
+          'Email Not Verified',
+          'Please verify your email before logging in.',
           snackPosition: SnackPosition.BOTTOM,
         );
       }
+      return userModel;
     } on FirebaseAuthException catch (e) {
       ErrorHandle.handleAuthError(e);
     } catch (e) {
@@ -74,13 +72,17 @@ class AuthService {
           id: user.uid,
           name: fullName,
           email: email,
+          points: 0,
+          questionsCount: 0,
+          answersCount: 0,
+          bestAnswersCount: 0,
           createdAt: DateTime.now(),
         );
 
         await _firestore
             .collection('users')
             .doc(user.uid)
-            .set(userModel.toFirestore());
+            .set(userModel.toFirestore(), SetOptions(merge: true));
       }
 
       await sendEmailVerification();
@@ -116,12 +118,16 @@ class AuthService {
             name: user.displayName ?? 'anonymous',
             email: user.email ?? '',
             createdAt: DateTime.now(),
+            points: 0,
+            questionsCount: 0,
+            answersCount: 0,
+            bestAnswersCount: 0,
           );
 
           await _firestore
               .collection('users')
               .doc(user.uid)
-              .set(userModel.toFirestore());
+              .set(userModel.toFirestore(), SetOptions(merge: true));
         }
       }
     } catch (e) {

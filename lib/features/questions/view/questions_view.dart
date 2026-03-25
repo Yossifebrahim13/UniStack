@@ -5,6 +5,6 @@ class QuestionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Questions')));
+    return Center(child: Text('Questions'));
   }
 }

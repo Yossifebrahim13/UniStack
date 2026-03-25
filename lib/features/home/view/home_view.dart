@@ -8,15 +8,13 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            Get.offAllNamed(AppRoutes.login);
-          },
-          child: Text("Logout"),
-        ),
+    return Center(
+      child: TextButton(
+        onPressed: () {
+          FirebaseAuth.instance.signOut();
+          Get.offAllNamed(AppRoutes.login);
+        },
+        child: Text("Logout"),
       ),
     );
   }

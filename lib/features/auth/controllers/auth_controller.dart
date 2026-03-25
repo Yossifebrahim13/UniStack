@@ -1,3 +1,4 @@
+import 'package:UniStack/core/models/user_model.dart';
 import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -54,19 +55,19 @@ class AuthController extends GetxController {
   }
 
   /// ========================= LOGIN ========================= ///
-  Future<void> login() async {
+  Future<UserModel?> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
       Get.snackbar('Error', 'Email & Password are required');
-      return;
+      return null;
     }
 
     try {
       isLoading.value = true;
 
-      await AuthService.instance.loginWithEmailAndPassword(
+      final userModel = await AuthService.instance.loginWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -74,6 +75,7 @@ class AuthController extends GetxController {
       if (AuthService.instance.getCurrentUser() != null) {
         Get.snackbar('Success', 'Logged in successfully');
       }
+      return userModel;
     } on FirebaseAuthException catch (e) {
       ErrorHandle.handleAuthError(e);
     } finally {

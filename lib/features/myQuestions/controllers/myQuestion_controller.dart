@@ -63,4 +63,24 @@ class MyQuestionsController extends GetxController {
       ErrorHandle.handleError(e as Exception);
     }
   }
+
+  void searchQuestions(String query) {
+    if (query.isEmpty) {
+      getMyQuestions();
+      return;
+    }
+    final filteredQuestions = _myQuestions.where((question) {
+      final titleMatch = question.title.toLowerCase().contains(
+        query.toLowerCase(),
+      );
+      final bodyMatch = question.body.toLowerCase().contains(
+        query.toLowerCase(),
+      );
+      final categoryMatch = question.category.toLowerCase().contains(
+        query.toLowerCase(),
+      );
+      return titleMatch || bodyMatch || categoryMatch;
+    }).toList();
+    _myQuestions.assignAll(filteredQuestions);
+  }
 }
