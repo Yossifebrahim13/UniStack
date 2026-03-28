@@ -1,3 +1,4 @@
+import 'package:UniStack/core/error/error_view.dart';
 import 'package:UniStack/features/auth/view/login_view.dart';
 import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String splash = "/splash";
   static const String onBoarding = "/onBoarding";
   static const String myQuestions = "/myQuestions";
+  static const String error = "/error";
 
   static List<GetPage> pages = [
     GetPage(name: splash, page: () => const SplashView()),
@@ -24,5 +26,6 @@ class AppRoutes {
     GetPage(name: root, page: () => const Root()),
     GetPage(name: myQuestions, page: () => const MyQuestionsView()),
     GetPage(name: home, page: () => const HomeView()),
+    GetPage(name: error, page: () => const ErrorView()),
   ];
 }

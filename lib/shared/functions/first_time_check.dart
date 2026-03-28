@@ -9,6 +9,6 @@ Future<void> firstTimeCheck() async {
   if (isFirstTime) {
     Get.offAllNamed(AppRoutes.onBoarding);
   } else {
-    await autoLogin();
+    handleAuthState();
   }
 }

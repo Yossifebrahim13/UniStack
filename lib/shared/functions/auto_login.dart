@@ -2,20 +2,25 @@ import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-Future<void> autoLogin() async {
-  final user = FirebaseAuth.instance.currentUser;
+void handleAuthState() {
+  FirebaseAuth.instance.authStateChanges().listen((user) async {
+    if (user == null) {
+      _goToLogin();
+      return;
+    }
 
-  if (user == null) {
-    Get.offAllNamed(AppRoutes.login);
-    return;
-  }
+    if (user.emailVerified) {
+      _goToRoot();
+    } else {
+      _goToLogin();
+    }
+  });
+}
 
-  await user.reload();
-  final refreshedUser = FirebaseAuth.instance.currentUser;
+void _goToLogin() {
+  Future.microtask(() => Get.offAllNamed(AppRoutes.login));
+}
 
-  if (refreshedUser != null && refreshedUser.emailVerified) {
-    Get.offAllNamed(AppRoutes.root);
-  } else {
-    Get.offAllNamed(AppRoutes.login);
-  }
+void _goToRoot() {
+  Future.microtask(() => Get.offAllNamed(AppRoutes.root));
 }

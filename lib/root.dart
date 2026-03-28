@@ -1,10 +1,11 @@
+import 'package:UniStack/core/error/error_controller.dart';
+import 'package:UniStack/core/error/error_view.dart';
 import 'package:UniStack/shared/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/features/questions/view/questions_view.dart';
 import 'package:UniStack/features/myQuestions/view/myQuestions_view.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 class Root extends StatefulWidget {
@@ -56,9 +57,16 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<NetworkController>();
     return Scaffold(
       extendBody: true,
-      body: IndexedStack(index: currentIndex, children: screens),
+      body: Obx(() {
+        if (controller.isConnected.value) {
+          return IndexedStack(index: currentIndex, children: screens);
+        } else {
+          return const ErrorView();
+        }
+      }),
 
       // FAB
       floatingActionButton: FloatingActionButton(
