@@ -69,13 +69,15 @@ class _RootState extends State<Root> {
       }),
 
       // FAB
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showAskQuestionBottomSheet();
-        },
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.add, color: AppColors.card),
-      ),
+      floatingActionButton: currentIndex != 1
+          ? FloatingActionButton(
+              onPressed: () {
+                showAskQuestionBottomSheet(context);
+              },
+              backgroundColor: AppColors.primary,
+              child: const Icon(Icons.add, color: AppColors.card),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
       // Bottom Navigation Bar

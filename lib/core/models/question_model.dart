@@ -30,11 +30,11 @@ class QuestionModel {
     final data = doc.data() as Map<String, dynamic>;
     return QuestionModel(
       id: doc.id,
-      title: data['title'],
-      body: data['body'],
-      category: data['category'],
-      userId: data['userId'],
-      userName: data['userName'],
+      title: data['title'] ?? '',
+      body: data['body'] ?? '',
+      category: data['category'] ?? '',
+      userId: data['userId'] ?? '',
+      userName: data['userName'] ?? '',
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),

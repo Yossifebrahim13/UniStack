@@ -21,9 +21,9 @@ class AnswerModel {
     final data = doc.data() as Map<String, dynamic>;
     return AnswerModel(
       id: doc.id,
-      body: data['body'],
-      userId: data['userId'],
-      userName: data['userName'],
+      body: data['body'] ?? '',
+      userId: data['userId'] ?? '',
+      userName: data['userName'] ?? '',
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),

@@ -1,5 +1,7 @@
+import 'package:UniStack/core/binding/root_binding.dart';
 import 'package:UniStack/core/error/error_view.dart';
 import 'package:UniStack/features/auth/view/login_view.dart';
+import 'package:UniStack/features/auth/view/profile_view.dart';
 import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/features/myQuestions/view/myQuestions_view.dart';
@@ -17,15 +19,25 @@ class AppRoutes {
   static const String onBoarding = "/onBoarding";
   static const String myQuestions = "/myQuestions";
   static const String error = "/error";
+  static const String profile = "/profile";
 
   static List<GetPage> pages = [
     GetPage(name: splash, page: () => const SplashView()),
     GetPage(name: onBoarding, page: () => const OnboardingView()),
     GetPage(name: login, page: () => const LoginView()),
     GetPage(name: signUp, page: () => const SignupView()),
-    GetPage(name: root, page: () => const Root()),
-    GetPage(name: myQuestions, page: () => const MyQuestionsView()),
-    GetPage(name: home, page: () => const HomeView()),
+    GetPage(name: root, page: () => const Root(), bindings: [RootBinding()]),
+    GetPage(
+      name: myQuestions,
+      page: () => const MyQuestionsView(),
+      bindings: [RootBinding()],
+    ),
+    GetPage(
+      name: home,
+      page: () => const HomeView(),
+      bindings: [RootBinding()],
+    ),
     GetPage(name: error, page: () => const ErrorView()),
+    GetPage(name: profile, page: () => ProfileView()),
   ];
 }

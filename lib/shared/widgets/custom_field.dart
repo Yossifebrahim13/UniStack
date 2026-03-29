@@ -7,10 +7,12 @@ class CustomField extends StatefulWidget {
     required this.hintText,
     required this.maxLines,
     this.controller,
+    this.validator,
   });
   final String hintText;
   final int maxLines;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   @override
   State<CustomField> createState() => _CustomFieldState();
@@ -31,12 +33,7 @@ class _CustomFieldState extends State<CustomField> {
         filled: true,
         fillColor: AppColors.inputFill,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter ${widget.hintText}';
-        }
-        return null;
-      },
+      validator: widget.validator,
     );
   }
 }

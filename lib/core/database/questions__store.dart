@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 class QuestionsStore {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  static QuestionsStore get instance => Get.find();
+  static QuestionsStore get instance => Get.put(QuestionsStore());
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

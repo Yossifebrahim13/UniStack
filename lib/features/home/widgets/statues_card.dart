@@ -1,8 +1,14 @@
-// دي ميثود بنادي عليها تبعتلي "ويدجت" كارت جاهز
 import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-Widget buildStatCard(String title, String value, String unit, IconData icon, Color iconColor) {
+
+Widget buildStatCard(
+  String title,
+  String value,
+  String unit,
+  IconData icon,
+  Color iconColor,
+) {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -22,11 +28,8 @@ Widget buildStatCard(String title, String value, String unit, IconData icon, Col
         Icon(icon, color: iconColor, size: 28),
         const Gap(12),
         Text(
-          title, 
-          style: const TextStyle(
-            color: AppColors.textSecondary, 
-            fontSize: 14
-          )
+          title,
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
         ),
         const Gap(5),
         Row(
@@ -34,21 +37,21 @@ Widget buildStatCard(String title, String value, String unit, IconData icon, Col
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              value, 
+              value,
               style: const TextStyle(
                 color: AppColors.textPrimary,
-                fontSize: 22, 
-                fontWeight: FontWeight.bold
-              )
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const Gap(4),
             Text(
-              unit, 
-              style: const TextStyle(
-                color: AppColors.primary, 
+              unit,
+              style: TextStyle(
+                color: unit == "RANK" ? AppColors.warning : AppColors.primary,
                 fontSize: 12,
-                fontWeight: FontWeight.w600
-              )
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

@@ -47,6 +47,7 @@ class AuthController extends GetxController {
         'Success',
         'Account created successfully. Check your email for verification.',
       );
+      Get.offAllNamed(AppRoutes.login);
     } on FirebaseAuthException catch (e) {
       ErrorHandle.handleAuthError(e);
     } finally {
