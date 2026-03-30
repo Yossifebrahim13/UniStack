@@ -82,6 +82,7 @@ class AuthController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+    return null;
   }
 
   /// ========================= GOOGLE SIGN IN ========================= ///

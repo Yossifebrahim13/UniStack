@@ -1,7 +1,6 @@
 import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class InfoCard extends StatelessWidget {
   final String title;
