@@ -1,14 +1,12 @@
-import 'package:UniStack/core/error/error_controller.dart';
 import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:get/route_manager.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(NetworkController());
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -25,6 +23,7 @@ class UniStack extends StatelessWidget {
       title: 'UniStack',
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.splash,
+
       getPages: AppRoutes.pages,
     );
   }

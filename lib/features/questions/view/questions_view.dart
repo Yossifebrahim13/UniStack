@@ -68,7 +68,7 @@ class QuestionsView extends StatelessWidget {
                             question: controller.filteredQuestions[index],
                           ),
                       separatorBuilder: (BuildContext context, int index) =>
-                          Gap(10),
+                          Gap(screenWidth * 0.02),
                       itemCount: controller.filteredQuestions.length,
                     ),
                   ),
