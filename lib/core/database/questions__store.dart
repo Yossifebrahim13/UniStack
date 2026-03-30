@@ -64,7 +64,7 @@ class QuestionsStore {
     await _firestore.collection('questions').doc(questionId).delete();
 
     await _firestore.collection('users').doc(userModel.id).update({
-      'points': FieldValue.increment(-10),
+      'points': FieldValue.increment(-5),
       'questionsCount': FieldValue.increment(-1),
     });
   }
@@ -103,7 +103,13 @@ class QuestionsStore {
   }
 
   Future<List<QuestionModel>> getQuestions() async {
-    final snapshot = await _firestore.collection('questions').get();
+    final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    final snapshot = await _firestore
+        .collection('questions')
+        .where('userId', isNotEqualTo: currentUserId)
+        .get();
+
     return snapshot.docs
         .map((doc) => QuestionModel.fromFirestore(doc))
         .toList();

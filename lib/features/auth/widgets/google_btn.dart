@@ -2,7 +2,12 @@ import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-Widget googleBtn(double screenHeight, double screenWidth, VoidCallback onTap, {bool isLoading = false}) {
+Widget googleBtn(
+  double screenHeight,
+  double screenWidth,
+  VoidCallback onTap, {
+  bool isLoading = false,
+}) {
   return InkWell(
     onTap: isLoading ? null : onTap,
     child: Container(
@@ -28,7 +33,14 @@ Widget googleBtn(double screenHeight, double screenWidth, VoidCallback onTap, {b
             ),
             Gap(screenWidth * 0.02),
           ],
-          const Text("Sign in with Google"),
+          Gap(screenWidth * 0.01),
+          Text(
+            "Sign in with Google",
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: screenWidth * 0.04,
+            ),
+          ),
         ],
       ),
     ),

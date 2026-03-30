@@ -1,3 +1,4 @@
+import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -42,6 +43,11 @@ class ErrorHandle {
   }
 
   static void handleError(Exception e) {
-    Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+    Get.snackbar(
+      'Error',
+      e.toString(),
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.error,
+    );
   }
 }

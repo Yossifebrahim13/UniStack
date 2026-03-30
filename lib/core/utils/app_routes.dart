@@ -1,13 +1,16 @@
+import 'package:UniStack/core/binding/auth_bindin.dart';
 import 'package:UniStack/core/binding/root_binding.dart';
 import 'package:UniStack/core/error/error_view.dart';
 import 'package:UniStack/features/auth/view/login_view.dart';
 import 'package:UniStack/features/auth/view/profile_view.dart';
 import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
+import 'package:UniStack/features/myQuestions/view/edit_question_view.dart';
 import 'package:UniStack/features/myQuestions/view/myQuestions_view.dart';
 import 'package:UniStack/onboarding_view.dart';
 import 'package:UniStack/root.dart';
 import 'package:UniStack/splash_view.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class AppRoutes {
@@ -20,12 +23,29 @@ class AppRoutes {
   static const String myQuestions = "/myQuestions";
   static const String error = "/error";
   static const String profile = "/profile";
+  static const String editQuestion = "/editQuestion";
 
   static List<GetPage> pages = [
-    GetPage(name: splash, page: () => const SplashView()),
-    GetPage(name: onBoarding, page: () => const OnboardingView()),
-    GetPage(name: login, page: () => const LoginView()),
-    GetPage(name: signUp, page: () => const SignupView()),
+    GetPage(
+      name: splash,
+      page: () => const SplashView(),
+      bindings: [AuthBinding()],
+    ),
+    GetPage(
+      name: onBoarding,
+      page: () => const OnboardingView(),
+      bindings: [AuthBinding()],
+    ),
+    GetPage(
+      name: login,
+      page: () => const LoginView(),
+      bindings: [AuthBinding()],
+    ),
+    GetPage(
+      name: signUp,
+      page: () => const SignupView(),
+      bindings: [AuthBinding()],
+    ),
     GetPage(name: root, page: () => const Root(), bindings: [RootBinding()]),
     GetPage(
       name: myQuestions,
@@ -39,5 +59,10 @@ class AppRoutes {
     ),
     GetPage(name: error, page: () => const ErrorView()),
     GetPage(name: profile, page: () => ProfileView()),
+    GetPage(
+      name: editQuestion,
+      page: () => EditQuestionView(question: Get.arguments),
+      bindings: [RootBinding()],
+    ),
   ];
 }

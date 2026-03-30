@@ -1,5 +1,6 @@
 import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/core/utils/app_routes.dart';
+import 'package:UniStack/features/auth/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return AppBar(
       backgroundColor: AppColors.scaffold,
       elevation: 0,
@@ -55,6 +57,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.logout_sharp,
+            color: AppColors.textSecondary,
+            size: screenWidth * 0.07,
+          ),
+          onPressed: () => controller.logout(),
+        ),
+      ],
     );
   }
 

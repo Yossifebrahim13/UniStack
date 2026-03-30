@@ -49,6 +49,7 @@ class AuthService {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+    return null;
   }
 
   /// ========================= SIGN UP ========================= ///

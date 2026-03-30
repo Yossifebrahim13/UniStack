@@ -32,114 +32,119 @@ class HomeView extends StatelessWidget {
     final screenHeight = AppSizes(context).screenHeight;
     final controller = Get.put(HomeController());
 
-    return Scaffold(
-      backgroundColor: AppColors.scaffold,
-      appBar: CustomAppBar(screenWidth: screenWidth, showBackButton: false),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-        children: [
-          Gap(screenHeight * 0.02),
+    return RefreshIndicator(
+      onRefresh: () => controller.getStats(),
+      color: AppColors.primary,
+      backgroundColor: AppColors.sheetBackground,
+      child: Scaffold(
+        backgroundColor: AppColors.scaffold,
+        appBar: CustomAppBar(screenWidth: screenWidth, showBackButton: false),
+        body: ListView(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          children: [
+            Gap(screenHeight * 0.02),
 
-          Text(
-            "Hello, ${AuthService.instance.auth.currentUser!.displayName} 👋",
-            style: TextStyle(
-              fontSize: screenWidth * 0.06,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-
-          Gap(screenHeight * 0.02),
-
-          Obx(
-            () => Skeletonizer(
-              enabled: controller.isLoading.value,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: buildStatCard(
-                      "Total Points",
-                      "${controller.points}",
-                      "PTS",
-                      Icons.wallet,
-                      AppColors.primary,
-                    ),
-                  ),
-                  Gap(screenWidth * 0.02),
-                  Expanded(
-                    child: buildStatCard(
-                      "Global Rank",
-                      "${controller.rank}",
-                      "RANK",
-                      Icons.emoji_events,
-                      AppColors.warning,
-                    ),
-                  ),
-                ],
+            Text(
+              "Hello, ${AuthService.instance.auth.currentUser!.displayName} 👋",
+              style: TextStyle(
+                fontSize: screenWidth * 0.06,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-          ),
-          Gap(screenHeight * 0.06),
 
-          Text(
-            "Quick Actions",
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
-              fontSize: screenWidth * 0.06,
+            Gap(screenHeight * 0.02),
+
+            Obx(
+              () => Skeletonizer(
+                enabled: controller.isLoading.value,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: buildStatCard(
+                        "Total Points",
+                        "${controller.points}",
+                        "PTS",
+                        Icons.wallet,
+                        AppColors.primary,
+                      ),
+                    ),
+                    Gap(screenWidth * 0.02),
+                    Expanded(
+                      child: buildStatCard(
+                        "Global Rank",
+                        "${controller.rank}",
+                        "RANK",
+                        Icons.emoji_events,
+                        AppColors.warning,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          Gap(screenHeight * 0.02),
+            Gap(screenHeight * 0.06),
 
-          SizedBox(
-            height: screenHeight * 0.15,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (BuildContext context, int index) =>
-                  quickActionsCard(
-                    quickActions[index]["icon"],
-                    quickActions[index]["title"],
-                    quickActions[index]["action"],
-                  ),
-              separatorBuilder: (BuildContext context, int index) =>
-                  Gap(screenWidth * 0.02),
-              itemCount: quickActions.length,
+            Text(
+              "Quick Actions",
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: screenWidth * 0.06,
+              ),
             ),
-          ),
+            Gap(screenHeight * 0.02),
 
-          Gap(screenHeight * 0.05),
-
-          Text(
-            "Announcements",
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
-              fontSize: screenWidth * 0.06,
+            SizedBox(
+              height: screenHeight * 0.15,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) =>
+                    quickActionsCard(
+                      quickActions[index]["icon"],
+                      quickActions[index]["title"],
+                      quickActions[index]["action"],
+                    ),
+                separatorBuilder: (BuildContext context, int index) =>
+                    Gap(screenWidth * 0.02),
+                itemCount: quickActions.length,
+              ),
             ),
-          ),
-          Gap(screenHeight * 0.02),
 
-          announcementCard(
-            "Welcome to UniStack!",
-            "Check out the new learning resources available now.",
-            Icons.campaign_rounded,
-            AppColors.primary,
-            () => {},
-          ),
+            Gap(screenHeight * 0.05),
 
-          Gap(screenHeight * 0.03),
+            Text(
+              "Announcements",
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: screenWidth * 0.06,
+              ),
+            ),
+            Gap(screenHeight * 0.02),
 
-          announcementCard(
-            "User Guidelines",
-            "Keep our community safe and helpful",
-            Icons.rule_rounded,
-            AppColors.warning,
-            () => {},
-          ),
+            announcementCard(
+              "Welcome to UniStack!",
+              "Check out the new learning resources available now.",
+              Icons.campaign_rounded,
+              AppColors.primary,
+              () => {},
+            ),
 
-          Gap(screenHeight * 0.15),
-        ],
+            Gap(screenHeight * 0.03),
+
+            announcementCard(
+              "User Guidelines",
+              "Keep our community safe and helpful",
+              Icons.rule_rounded,
+              AppColors.warning,
+              () => {},
+            ),
+
+            Gap(screenHeight * 0.15),
+          ],
+        ),
       ),
     );
   }
