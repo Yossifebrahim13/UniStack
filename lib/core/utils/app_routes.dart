@@ -8,6 +8,7 @@ import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/features/myQuestions/view/edit_question_view.dart';
 import 'package:UniStack/features/myQuestions/view/myQuestions_view.dart';
+import 'package:UniStack/features/settings/view/settings_view.dart';
 import 'package:UniStack/onboarding_view.dart';
 import 'package:UniStack/root.dart';
 import 'package:UniStack/splash_view.dart';
@@ -26,6 +27,7 @@ class AppRoutes {
   static const String profile = "/profile";
   static const String editQuestion = "/editQuestion";
   static const String answers = "/answers";
+  static const String settings = "/settings";
 
   static List<GetPage> pages = [
     GetPage(
@@ -71,5 +73,6 @@ class AppRoutes {
       page: () => AnswersView(question: Get.arguments),
       // bindings: [RootBinding()],
     ),
+    GetPage(name: settings, page:()=>SettingsView())
   ];
 }

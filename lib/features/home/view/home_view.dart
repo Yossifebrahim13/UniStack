@@ -23,7 +23,7 @@ class HomeView extends StatelessWidget {
         "icon": Icons.person,
         "action": () => Get.offAllNamed(AppRoutes.profile),
       },
-      {"title": "Settings", "icon": Icons.settings, "action": () => {}},
+      {"title": "Settings", "icon": Icons.settings, "action": () => Get.offAllNamed(AppRoutes.settings)},
       {"title": "About", "icon": Icons.info, "action": () => {}},
     ];
 

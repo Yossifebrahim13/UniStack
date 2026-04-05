@@ -38,8 +38,7 @@ class HomeController extends GetxController {
             .getUserQuestionsCount();
         _answersCount.value = await UserStore.instance.getUserAnswersCount();
       }
-    } catch (e) {
-      ErrorHandle.handleError(e as Exception);
+    } catch (e) {Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
     }
