@@ -1,3 +1,4 @@
+import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:UniStack/features/questions/controllers/questions_controller.dart';
 import 'package:UniStack/features/questions/widgets/questions_card.dart';
@@ -17,18 +18,17 @@ class QuestionsView extends StatelessWidget {
     final controller = Get.find<QuestionsController>();
     final screenWidth = AppSizes(context).screenWidth;
     final screenHeight = AppSizes(context).screenHeight;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: RefreshIndicator(
-        color: AppColors.primary,
+      child: Scaffold(
         backgroundColor: AppColors.scaffold,
-        onRefresh: () => controller.getQuestions(),
-        child: Scaffold(
+        appBar: CustomAppBar(screenWidth: screenWidth, showBackButton: false),
+        body: RefreshIndicator(
+          color: AppColors.primary,
           backgroundColor: AppColors.scaffold,
-
-          appBar: CustomAppBar(screenWidth: screenWidth, showBackButton: false),
-
-          body: Padding(
+          onRefresh: () => controller.getQuestions(),
+          child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: screenWidth * 0.03,
               vertical: screenHeight * 0.02,
@@ -44,7 +44,7 @@ class QuestionsView extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Explore the latest acadmic quries from \n your community",
+                  "Explore the latest academic queries from \n your community",
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: screenWidth * 0.04,
@@ -52,27 +52,60 @@ class QuestionsView extends StatelessWidget {
                 ),
                 Gap(screenWidth * 0.05),
                 SearchField(
-                  onSearch: (value) {
-                    controller.getQuestionsBySearch(value);
-                  },
+                  onSearch: (value) => controller.getQuestionsBySearch(value),
                 ),
                 Gap(screenWidth * 0.05),
-                Obx(
-                  () => Skeletonizer(
+
+                Obx(() {
+                  if (controller.isLoading.value &&
+                      controller.filteredQuestions.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(screenWidth * 0.1),
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (controller.filteredQuestions.isEmpty) {
+                    return Center(
+                      child: Column(
+                        children: [
+                          Gap(screenWidth * 0.2),
+                          Icon(
+                            Icons.question_mark,
+                            size: screenWidth * 0.15,
+                            color: Colors.grey.shade400,
+                          ),
+                          Gap(screenWidth * 0.04),
+                          Text("No unanswered questions found"),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return Skeletonizer(
                     enabled: controller.isLoading.value,
                     child: ListView.separated(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) =>
-                          QuestionCard(
-                            question: controller.filteredQuestions[index],
-                          ),
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Gap(screenWidth * 0.02),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.filteredQuestions.length,
+                      separatorBuilder: (context, index) =>
+                          Gap(screenWidth * 0.02),
+                      itemBuilder: (context, index) {
+                        return QuestionCard(
+                          question: controller.filteredQuestions[index],
+                          onTap: () => Get.offNamed(
+                            AppRoutes.answers,
+                            arguments: controller.filteredQuestions[index],
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),

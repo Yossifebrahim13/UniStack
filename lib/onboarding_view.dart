@@ -43,7 +43,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   void nextPage() {
     if (pageIndex == pages.length - 1) {
       Get.offAllNamed(AppRoutes.login);
-      PrefHelpers().saveFirstTime(false);
+      PrefHelpers.saveFirstTime(false);
     } else {
       _controller.nextPage(
         duration: const Duration(milliseconds: 400),
@@ -75,7 +75,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 child: TextButton(
                   onPressed: () {
                     Get.offAllNamed(AppRoutes.login);
-                    PrefHelpers().saveFirstTime(false);
+                    PrefHelpers.saveFirstTime(false);
                   },
                   child: const Text(
                     "Skip",

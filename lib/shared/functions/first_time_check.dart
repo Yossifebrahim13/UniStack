@@ -4,7 +4,7 @@ import 'package:UniStack/shared/functions/auto_login.dart';
 import 'package:get/get.dart';
 
 Future<void> firstTimeCheck() async {
-  bool isFirstTime = await PrefHelpers().getFirstTime();
+  bool isFirstTime = await PrefHelpers.getFirstTime();
 
   if (isFirstTime) {
     Get.offAllNamed(AppRoutes.onBoarding);

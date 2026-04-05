@@ -17,6 +17,20 @@ class UserStore {
     return userDoc['points'];
   }
 
+  Future<int> getUserCorrectAnswers() async {
+    final user = _auth.currentUser;
+    if (user == null) return 0;
+
+    final userDoc = await _firestore.collection('users').doc(user.uid).get();
+
+    if (userDoc.exists) {
+      final userModel = UserModel.fromFirestore(userDoc);
+      return userModel.bestAnswersCount;
+    }
+
+    return 0;
+  }
+
   Future<int> getUserRank() async {
     final snapshot = await _firestore.collection('users').get();
     final users = snapshot.docs

@@ -13,12 +13,12 @@ class InfoCard extends StatelessWidget {
     final screenWidth = AppSizes(context).screenWidth;
 
     return Container(
-      width: screenWidth * 0.35,
-      height: screenWidth * 0.20,
+      width: screenWidth * 0.40,
+      height: screenWidth * 0.30,
       margin: EdgeInsets.only(right: screenWidth * 0.03),
       padding: EdgeInsets.symmetric(
         horizontal: screenWidth * 0.05,
-        vertical: screenWidth * 0.06,
+        vertical: screenWidth * 0.01,
       ),
       decoration: BoxDecoration(
         color: AppColors.card,

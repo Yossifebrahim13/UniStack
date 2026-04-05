@@ -1,6 +1,7 @@
 import 'package:UniStack/core/binding/auth_bindin.dart';
 import 'package:UniStack/core/binding/root_binding.dart';
 import 'package:UniStack/core/error/error_view.dart';
+import 'package:UniStack/features/answers/view/answers_view.dart';
 import 'package:UniStack/features/auth/view/login_view.dart';
 import 'package:UniStack/features/auth/view/profile_view.dart';
 import 'package:UniStack/features/auth/view/signup_view.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String error = "/error";
   static const String profile = "/profile";
   static const String editQuestion = "/editQuestion";
+  static const String answers = "/answers";
 
   static List<GetPage> pages = [
     GetPage(
@@ -63,6 +65,11 @@ class AppRoutes {
       name: editQuestion,
       page: () => EditQuestionView(question: Get.arguments),
       bindings: [RootBinding()],
+    ),
+    GetPage(
+      name: answers,
+      page: () => AnswersView(question: Get.arguments),
+      // bindings: [RootBinding()],
     ),
   ];
 }

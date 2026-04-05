@@ -20,7 +20,7 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final AuthController authController = Get.put(AuthController());
+  final AuthController authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -154,17 +154,19 @@ class _SignupViewState extends State<SignupView> {
                             },
                           ),
                           Gap(screenWidth * 0.07),
-                          Obx(() => AuthBtn(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                authController.signUp();
-                              }
-                            },
-                            text: authController.isLoading.value
-                                ? "Creating Account..."
-                                : "Create Account",
-                            isLoading: authController.isLoading.value,
-                          )),
+                          Obx(
+                            () => AuthBtn(
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  authController.signUp();
+                                }
+                              },
+                              text: authController.isLoading.value
+                                  ? "Creating Account..."
+                                  : "Create Account",
+                              isLoading: authController.isLoading.value,
+                            ),
+                          ),
                           Gap(screenWidth * 0.07),
                           Row(
                             children: const [
@@ -183,12 +185,14 @@ class _SignupViewState extends State<SignupView> {
                             ],
                           ),
                           Gap(screenWidth * 0.05),
-                          Obx(() => googleBtn(
-                            screenHeight, 
-                            screenWidth, 
-                            authController.signInWithGoogle,
-                            isLoading: authController.isGoogleLoading.value,
-                          )),
+                          Obx(
+                            () => googleBtn(
+                              screenHeight,
+                              screenWidth,
+                              authController.signInWithGoogle,
+                              isLoading: authController.isGoogleLoading.value,
+                            ),
+                          ),
                         ],
                       ),
                     ),

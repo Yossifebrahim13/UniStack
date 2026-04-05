@@ -17,118 +17,122 @@ class MyQuestionsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = AppSizes(context).screenWidth;
-    final screenHeight = AppSizes(context).screenHeight;
     final controller = Get.find<MyQuestionsController>();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: RefreshIndicator(
-        color: AppColors.primary,
+      child: Scaffold(
         backgroundColor: AppColors.scaffold,
-        onRefresh: () => controller.getMyQuestions(),
-        child: Scaffold(
+        appBar: CustomAppBar(screenWidth: screenWidth, showBackButton: false),
+        body: RefreshIndicator(
+          color: AppColors.primary,
           backgroundColor: AppColors.scaffold,
-          appBar: CustomAppBar(screenWidth: screenWidth, showBackButton: false),
-          body: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: screenWidth * 0.02,
-              vertical: screenWidth * 0.02,
-            ),
+          onRefresh: () => controller.getMyQuestions(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
             child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
               children: [
+                Gap(screenWidth * 0.04),
+
                 Obx(
                   () => Skeletonizer(
                     enabled: controller.isLoading.value,
-                    child: SizedBox(
-                      height: screenHeight * 0.2,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Gap(screenWidth * 0.1),
-                          InfoCard(
-                            title: "Active \nDiscussions",
-                            value: controller.myQuestions.length.toString(),
-                          ),
-
-                          Gap(screenWidth * 0.05),
-                          InfoCard(
-                            title: "Correct \nAnswers",
-                            value: controller.myQuestions
-                                .where((question) => question.isAnswered)
-                                .length
-                                .toString(),
-                          ),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InfoCard(
+                          title: "Active \nDiscussions",
+                          value: controller.myQuestions.length.toString(),
+                        ),
+                        InfoCard(
+                          title: "Correct \nAnswers",
+                          value: controller.correctAnswersCount.value
+                              .toString(),
+                        ),
+                      ],
                     ),
                   ),
                 ),
 
-                Gap(screenWidth * 0.05),
-
-                Text(
-                  "Search",
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.06,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                    wordSpacing: 2,
-                    letterSpacing: 2,
-                  ),
-                ),
-
+                Gap(screenWidth * 0.08),
+                Text("Search", style: _sectionHeaderStyle(screenWidth)),
                 Gap(screenWidth * 0.02),
-
                 SearchField(
-                  onSearch: (query) {
-                    controller.searchQuestions(query);
-                  },
-                ),
-                Gap(screenWidth * 0.05),
-
-                Text(
-                  "My Questions",
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.06,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                    wordSpacing: 2,
-                    letterSpacing: 2,
-                  ),
+                  onSearch: (query) => controller.searchQuestions(query),
                 ),
 
                 Gap(screenWidth * 0.05),
+                Text("My Questions", style: _sectionHeaderStyle(screenWidth)),
+                Gap(screenWidth * 0.03),
 
-                Obx(
-                  () => Skeletonizer(
+                Obx(() {
+                  if (controller.isLoading.value &&
+                      controller.filteredQuestions.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (controller.filteredQuestions.isEmpty) {
+                    return _buildEmptyState(screenWidth);
+                  }
+
+                  return Skeletonizer(
                     enabled: controller.isLoading.value,
-                    child: ListView.builder(
+                    child: ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.filteredQuestions.length,
+                      separatorBuilder: (context, index) =>
+                          Gap(screenWidth * 0.02),
                       itemBuilder: (context, index) {
                         final question = controller.filteredQuestions[index];
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: screenWidth * 0.02,
+                        return MyQuestionCard(
+                          question: question,
+                          onTap: () => Get.offNamed(
+                            AppRoutes.answers,
+                            arguments: question,
                           ),
-                          child: MyQuestionCard(
-                            question: question,
-                            onTapEdit: () => Get.toNamed(
-                              AppRoutes.editQuestion,
-                              arguments: question,
-                            ),
-                            onTapDelete: () =>
-                                controller.deleteMyQuestion(question.id),
+                          onTapEdit: () => Get.toNamed(
+                            AppRoutes.editQuestion,
+                            arguments: question,
                           ),
+                          onTapDelete: () =>
+                              controller.deleteMyQuestion(question.id),
                         );
                       },
                     ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  TextStyle _sectionHeaderStyle(double screenWidth) {
+    return TextStyle(
+      fontSize: screenWidth * 0.06,
+      fontWeight: FontWeight.bold,
+      color: AppColors.textPrimary,
+      letterSpacing: 1.2,
+    );
+  }
+
+  Widget _buildEmptyState(double screenWidth) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.2),
+      child: Column(
+        children: [
+          Icon(
+            Icons.question_answer_outlined,
+            size: screenWidth * 0.15,
+            color: Colors.grey.shade400,
+          ),
+          Gap(screenWidth * 0.04),
+          const Text("No questions found in your history"),
+        ],
       ),
     );
   }

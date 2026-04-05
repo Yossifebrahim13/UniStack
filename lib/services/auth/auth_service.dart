@@ -1,5 +1,6 @@
 import 'package:UniStack/core/error/error_handle.dart';
 import 'package:UniStack/core/models/user_model.dart';
+import 'package:UniStack/core/utils/pref_helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,8 @@ class AuthService {
           .collection('users')
           .doc(user!.uid)
           .get();
-
+      await PrefHelpers.clearUserId();
+      await PrefHelpers.saveUserId(user.uid);
       final userModel = UserModel.fromFirestore(userDoc);
       if (!user.emailVerified) {
         await sendEmailVerification();
@@ -112,7 +114,8 @@ class AuthService {
 
       if (user != null) {
         final doc = await _firestore.collection('users').doc(user.uid).get();
-
+        await PrefHelpers.clearUserId();
+        await PrefHelpers.saveUserId(user.uid);
         if (!doc.exists) {
           final userModel = UserModel(
             id: user.uid,
@@ -143,6 +146,7 @@ class AuthService {
   /// ========================= LOGOUT ========================= ///
   Future<void> logout() async {
     await GoogleSignIn().signOut();
+    await PrefHelpers.clearUserId();
     await auth.signOut();
   }
 

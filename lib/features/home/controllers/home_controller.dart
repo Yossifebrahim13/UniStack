@@ -26,6 +26,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> getStats() async {
+    if (isLoading.value) return;
     isLoading.value = true;
     try {
       await Future.delayed(const Duration(seconds: 1));

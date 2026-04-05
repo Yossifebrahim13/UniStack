@@ -1,4 +1,5 @@
 import 'package:UniStack/core/database/questions__store.dart';
+import 'package:UniStack/core/database/user_store.dart';
 import 'package:UniStack/core/error/error_handle.dart';
 import 'package:UniStack/core/models/question_model.dart';
 import 'package:UniStack/core/utils/app_colors.dart';
@@ -6,7 +7,9 @@ import 'package:get/get.dart';
 
 class MyQuestionsController extends GetxController {
   final QuestionsStore _questionStore = QuestionsStore.instance;
+  final UserStore _userStore = UserStore.instance;
   final RxBool isLoading = false.obs;
+  RxInt correctAnswersCount = 0.obs;
 
   final RxList<QuestionModel> _myQuestions = <QuestionModel>[].obs;
   List<QuestionModel> get myQuestions => _myQuestions.toList();
@@ -18,6 +21,19 @@ class MyQuestionsController extends GetxController {
   void onInit() {
     super.onInit();
     getMyQuestions();
+    fetchMyCorrectAnswers();
+  }
+
+  Future<void> fetchMyCorrectAnswers() async {
+    try {
+      isLoading.value = true;
+      final count = await _userStore.getUserCorrectAnswers();
+      correctAnswersCount.value = count;
+    } catch (e) {
+      ErrorHandle.handleError(e is Exception ? e : Exception(e.toString()));
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> getMyQuestions() async {

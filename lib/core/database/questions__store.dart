@@ -105,14 +105,26 @@ class QuestionsStore {
   Future<List<QuestionModel>> getQuestions() async {
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-    final snapshot = await _firestore
-        .collection('questions')
-        .where('userId', isNotEqualTo: currentUserId)
-        .get();
+    try {
+      Query query = _firestore
+          .collection('questions')
+          .where('userId', isNotEqualTo: currentUserId);
 
-    return snapshot.docs
-        .map((doc) => QuestionModel.fromFirestore(doc))
-        .toList();
+      final snapshot = await query.get();
+      return snapshot.docs
+          .map((doc) {
+            try {
+              return QuestionModel.fromFirestore(doc);
+            } catch (e) {
+              return null;
+            }
+          })
+          .whereType<QuestionModel>()
+          .toList();
+    } catch (e) {
+      print("Firestore Query Error: $e");
+      return [];
+    }
   }
 
   Future<List<QuestionModel>> getQuestionsByCategory(String category) async {

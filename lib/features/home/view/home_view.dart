@@ -18,7 +18,6 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List quickActions = [
-      {"title": "Ask", "icon": Icons.chat_outlined, "action": () => {}},
       {
         "title": "Profile",
         "icon": Icons.person,
@@ -30,7 +29,7 @@ class HomeView extends StatelessWidget {
 
     final screenWidth = AppSizes(context).screenWidth;
     final screenHeight = AppSizes(context).screenHeight;
-    final controller = Get.put(HomeController());
+    final controller = Get.find<HomeController>();
 
     return RefreshIndicator(
       onRefresh: () => controller.getStats(),
@@ -130,6 +129,7 @@ class HomeView extends StatelessWidget {
               Icons.campaign_rounded,
               AppColors.primary,
               () => {},
+              screenWidth,
             ),
 
             Gap(screenHeight * 0.03),
@@ -140,6 +140,7 @@ class HomeView extends StatelessWidget {
               Icons.rule_rounded,
               AppColors.warning,
               () => {},
+              screenWidth,
             ),
 
             Gap(screenHeight * 0.15),

@@ -10,10 +10,9 @@ class QuestionsController extends GetxController {
   final RxBool isLoading = false.obs;
 
   final RxList<QuestionModel> _questions = <QuestionModel>[].obs;
-  List<QuestionModel> get questions => _questions;
-  final RxList<QuestionModel> _filteredQuestions = <QuestionModel>[].obs;
+  List<QuestionModel> get filteredQuestions => _filteredQuestions;
 
-  List<QuestionModel> get filteredQuestions => _filteredQuestions.toList();
+  final RxList<QuestionModel> _filteredQuestions = <QuestionModel>[].obs;
 
   @override
   void onInit() {

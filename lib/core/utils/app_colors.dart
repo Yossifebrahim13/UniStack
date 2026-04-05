@@ -12,6 +12,7 @@ class AppColors {
   static const Color scaffold = Color(0xFFF5F7FB);
   static const Color card = Colors.white;
   static const Color sheetBackground = Color(0xFFFFFFFF);
+  static const Color loaderBackground = Color.fromARGB(255, 0, 0, 0);
 
   // Text
   static const Color textPrimary = Color(0xFF111827);
@@ -27,12 +28,6 @@ class AppColors {
 
   // Icons
   static const Color icon = Color(0xFF6B7280);
-
-  // Category Colors
-  static const Color computerScience = Color(0xFF2563EB);
-  static const Color economics = Color(0xFFF97316);
-  static const Color biology = Color(0xFF22C55E);
-  static const Color design = Color(0xFFA855F7);
 
   // Feedback
   static const Color success = Color(0xFF22C55E);
