@@ -10,9 +10,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.screenWidth,
     this.showBackButton = true,
+    this.showLogoutButton = true,
   });
   final double screenWidth;
   final bool showBackButton;
+  final bool showLogoutButton;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AuthController());
@@ -57,16 +59,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.logout_sharp,
-            color: AppColors.textSecondary,
-            size: screenWidth * 0.07,
-          ),
-          onPressed: () => controller.logout(),
-        ),
-      ],
+      actions: showLogoutButton
+          ? [
+              IconButton(
+                icon: Icon(
+                  Icons.logout_sharp,
+                  color: AppColors.textSecondary,
+                  size: screenWidth * 0.07,
+                ),
+                onPressed: () => controller.logout(),
+              ),
+            ]
+          : null,
     );
   }
 

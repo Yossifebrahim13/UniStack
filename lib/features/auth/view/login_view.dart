@@ -215,7 +215,7 @@ class _LoginViewState extends State<LoginView> {
                       Get.offAllNamed(AppRoutes.signUp);
                     },
                     child: Text(
-                      "Sign UP",
+                      "Create Account",
                       style: TextStyle(color: AppColors.primary),
                     ),
                   ),

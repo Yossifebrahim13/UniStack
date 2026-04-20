@@ -174,6 +174,46 @@ class AuthService {
     }
   }
 
+  /// ========================= DELETE ACCOUNT ========================= ///
+  Future<void> deleteAccount() async {
+    try {
+      final user = auth.currentUser;
+
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).delete();
+
+        await PrefHelpers.clearUserId();
+
+        await GoogleSignIn().signOut();
+
+        await user.delete();
+
+        Get.snackbar(
+          'Success',
+          'Your account has been deleted successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        Get.snackbar(
+          'Security Sensitive Operation',
+          'Please log in again before deleting your account.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        await logout();
+      } else {
+        ErrorHandle.handleAuthError(e);
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to delete account: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   /// ========================= CURRENT USER ========================= ///
   User? getCurrentUser() => auth.currentUser;
 }

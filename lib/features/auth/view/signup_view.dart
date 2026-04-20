@@ -203,7 +203,7 @@ class _SignupViewState extends State<SignupView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Already have an account? ",
+                          "Already have an account?",
                           style: TextStyle(color: AppColors.textSecondary),
                         ),
                         TextButton(

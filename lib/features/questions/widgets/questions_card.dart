@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:UniStack/core/models/question_model.dart';
 import 'package:UniStack/core/utils/app_colors.dart';
-import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:UniStack/shared/functions/date_format.dart';
 import 'package:UniStack/shared/widgets/category_chip.dart';
@@ -10,7 +8,6 @@ import 'package:UniStack/shared/widgets/status_chip.dart';
 import 'package:UniStack/shared/widgets/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 
 class QuestionCard extends StatelessWidget {
   const QuestionCard({super.key, required this.question, required this.onTap});

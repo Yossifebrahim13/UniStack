@@ -1,3 +1,4 @@
+import 'package:UniStack/about_view.dart';
 import 'package:UniStack/core/binding/auth_bindin.dart';
 import 'package:UniStack/core/binding/root_binding.dart';
 import 'package:UniStack/core/error/error_view.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
   static const String editQuestion = "/editQuestion";
   static const String answers = "/answers";
   static const String settings = "/settings";
+  static const String about = "/about";
 
   static List<GetPage> pages = [
     GetPage(
@@ -73,6 +75,7 @@ class AppRoutes {
       page: () => AnswersView(question: Get.arguments),
       // bindings: [RootBinding()],
     ),
-    GetPage(name: settings, page:()=>SettingsView())
+    GetPage(name: settings, page: () => SettingsView()),
+    GetPage(name: about, page: () => AboutView()),
   ];
 }
