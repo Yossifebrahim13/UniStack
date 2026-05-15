@@ -48,7 +48,7 @@ Widget buildStatCard(
             Text(
               unit,
               style: TextStyle(
-                color: unit == "RANK" ? AppColors.warning : AppColors.primary,
+                color: unit == "Rank" ? AppColors.warning : AppColors.primary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

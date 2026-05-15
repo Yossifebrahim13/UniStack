@@ -1,5 +1,4 @@
 import 'package:UniStack/core/database/user_store.dart';
-import 'package:UniStack/core/error/error_handle.dart';
 import 'package:UniStack/services/auth/auth_service.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +37,8 @@ class HomeController extends GetxController {
             .getUserQuestionsCount();
         _answersCount.value = await UserStore.instance.getUserAnswersCount();
       }
-    } catch (e) {Get.snackbar("Error", e.toString());
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
     }

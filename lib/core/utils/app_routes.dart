@@ -1,5 +1,7 @@
 import 'package:UniStack/about_view.dart';
+import 'package:UniStack/core/binding/answer_binding.dart';
 import 'package:UniStack/core/binding/auth_bindin.dart';
+import 'package:UniStack/core/binding/notification_settings_binding.dart';
 import 'package:UniStack/core/binding/root_binding.dart';
 import 'package:UniStack/core/error/error_view.dart';
 import 'package:UniStack/features/answers/view/answers_view.dart';
@@ -9,7 +11,9 @@ import 'package:UniStack/features/auth/view/signup_view.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/features/myQuestions/view/edit_question_view.dart';
 import 'package:UniStack/features/myQuestions/view/myQuestions_view.dart';
+import 'package:UniStack/features/notifications/view/notification_settings_view.dart';
 import 'package:UniStack/features/settings/view/settings_view.dart';
+import 'package:UniStack/help_and_support_view.dart';
 import 'package:UniStack/onboarding_view.dart';
 import 'package:UniStack/root.dart';
 import 'package:UniStack/splash_view.dart';
@@ -29,7 +33,9 @@ class AppRoutes {
   static const String editQuestion = "/editQuestion";
   static const String answers = "/answers";
   static const String settings = "/settings";
+  static const String notificationSettings = "/notificationSettings";
   static const String about = "/about";
+  static const String helpAndSupport = "/helpAndSupport";
 
   static List<GetPage> pages = [
     GetPage(
@@ -58,11 +64,7 @@ class AppRoutes {
       page: () => const MyQuestionsView(),
       bindings: [RootBinding()],
     ),
-    GetPage(
-      name: home,
-      page: () => const HomeView(),
-      bindings: [RootBinding()],
-    ),
+    GetPage(name: home, page: () => HomeView(), bindings: [RootBinding()]),
     GetPage(name: error, page: () => const ErrorView()),
     GetPage(name: profile, page: () => ProfileView()),
     GetPage(
@@ -72,10 +74,17 @@ class AppRoutes {
     ),
     GetPage(
       name: answers,
+      // question is dynamic: QuestionModel (normal nav) or String (notification tap)
       page: () => AnswersView(question: Get.arguments),
-      // bindings: [RootBinding()],
+      binding: AnswerBinding(),
     ),
     GetPage(name: settings, page: () => SettingsView()),
-    GetPage(name: about, page: () => AboutView()),
+    GetPage(
+      name: notificationSettings,
+      page: () => NotificationSettingsView(),
+      binding: NotificationSettingsBinding(),
+    ),
+    GetPage(name: about, page: () => const AboutView()),
+    GetPage(name: helpAndSupport, page: () => const HelpAndSupportView()),
   ];
 }

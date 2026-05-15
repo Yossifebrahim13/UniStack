@@ -9,6 +9,7 @@ class UserModel {
   final int questionsCount;
   final int answersCount;
   final int bestAnswersCount;
+  final String? fcmToken;
 
   final DateTime createdAt;
 
@@ -20,6 +21,7 @@ class UserModel {
     this.questionsCount = 0,
     this.answersCount = 0,
     this.bestAnswersCount = 0,
+    this.fcmToken,
     required this.createdAt,
   });
 
@@ -27,12 +29,13 @@ class UserModel {
     final data = doc.data() as Map<String, dynamic>;
     return UserModel(
       id: doc.id,
-      name: data['name'],
-      email: data['email'],
+      name: data['name'] ?? "",
+      email: data['email'] ?? "",
       points: data['points'] ?? 0,
       questionsCount: data['questionsCount'] ?? 0,
       answersCount: data['answersCount'] ?? 0,
       bestAnswersCount: data['bestAnswersCount'] ?? 0,
+      fcmToken: data['fcmToken'],
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
@@ -47,6 +50,7 @@ class UserModel {
       'questionsCount': questionsCount,
       'answersCount': answersCount,
       'bestAnswersCount': bestAnswersCount,
+      'fcmToken': fcmToken,
       'createdAt': createdAt,
     };
   }

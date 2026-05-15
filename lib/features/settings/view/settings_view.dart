@@ -1,7 +1,9 @@
+import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/core/utils/app_sizes.dart';
 import 'package:UniStack/features/auth/controllers/auth_controller.dart';
 import 'package:UniStack/features/settings/widgets/denger_zone.dart';
 import 'package:UniStack/features/settings/widgets/settings_tile.dart';
+import 'package:UniStack/features/settings/widgets/username_dialog.dart';
 import 'package:UniStack/shared/widgets/custom_appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:UniStack/core/utils/app_colors.dart';
@@ -9,8 +11,9 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 class SettingsView extends StatelessWidget {
-  const SettingsView({super.key});
-
+  SettingsView({super.key});
+  final AuthController authController = Get.find<AuthController>();
+  final TextEditingController _nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final screenWidth = AppSizes(context).screenWidth;
@@ -34,9 +37,9 @@ class SettingsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// General
-            const Text(
+            Text(
               "General Settings",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Gap(screenHeight * 0.02),
 
@@ -47,13 +50,13 @@ class SettingsView extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  settingsTile(Icons.notifications, "Notifications", () {}),
-                  Divider(thickness: 0.5),
-                  settingsTile(Icons.security, "Privacy & Security", () {}),
-                  Divider(thickness: 0.5),
-                  settingsTile(Icons.language, "Language", () {}),
-                  Divider(thickness: 0.5),
-                  settingsTile(Icons.help, "Help & Support", () {}),
+                  settingsTile(Icons.notifications, "Notifications", () {
+                    Get.toNamed(AppRoutes.notificationSettings);
+                  }),
+                  const Divider(thickness: 0.5),
+                  settingsTile(Icons.support_agent, "Help & Support", () {
+                    Get.toNamed(AppRoutes.helpAndSupport);
+                  }),
                 ],
               ),
             ),
@@ -61,12 +64,63 @@ class SettingsView extends StatelessWidget {
             Gap(screenHeight * 0.05),
 
             /// Account
-            const Text(
-              "Account Management",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              "Account",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Gap(screenHeight * 0.03),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  settingsTile(
+                    Icons.supervised_user_circle,
+                    "Change Username",
+                    () {
+                      final formKey = GlobalKey<FormState>();
+                      _nameController.text =
+                          authController.currentUser?.displayName ?? '';
+                      showDialog(
+                        context: context,
+                        builder: (context) => Form(
+                          key: formKey,
+                          child: Obx(
+                            () => buildUserNameDialog(
+                              context: context,
+                              screenHeight: screenHeight,
+                              onSubmit: () async {
+                                if (formKey.currentState!.validate()) {
+                                  await authController.updateUserName(
+                                    _nameController.text.trim(),
+                                  );
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+                                  }
+                                }
+                              },
+                              isLoading: authController.isLoading.value,
+                              controller: _nameController,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(thickness: 0.5),
+                  settingsTile(Icons.lock_rounded, "Change Password", () {
+                    authController.resetPassword(
+                      authController.currentUser!.email!,
+                    );
+                    Get.offAllNamed(AppRoutes.root);
+                  }),
+                ],
+              ),
+            ),
 
+            Gap(screenHeight * 0.03),
             dangerZone(context, screenHeight, screenWidth),
 
             Gap(screenHeight * 0.05),
@@ -89,10 +143,10 @@ class SettingsView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () => Get.find<AuthController>().logout(),
-                child: const Text(
+                onPressed: () => authController.logout(),
+                child: Text(
                   "Logout",
-                  style: TextStyle(color: AppColors.error),
+                  style: const TextStyle(color: AppColors.error),
                 ),
               ),
             ),

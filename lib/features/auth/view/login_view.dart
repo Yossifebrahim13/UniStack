@@ -34,30 +34,30 @@ class _LoginViewState extends State<LoginView> {
         backgroundColor: AppColors.scaffold,
         body: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Gap(screenHeight * 0.1),
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.asset(
-                    "lib/core/assets/img/applogo.jpeg",
-                    width: screenWidth * 0.2,
-                    height: screenWidth * 0.2,
-                    fit: BoxFit.cover,
-                  ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.asset(
+                  "lib/core/assets/img/applogo.jpeg",
+                  width: screenWidth * 0.2,
+                  height: screenWidth * 0.2,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Center(
-                child: const Text(
-                  "UniStack",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
+              const Text(
+                "UniStack",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
                 ),
               ),
-              Center(child: const Text("Learn, Ask , Share")),
+              const Text(
+                "Learn, Ask , Share",
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
               Gap(screenHeight * 0.05),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),

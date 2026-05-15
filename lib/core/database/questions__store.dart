@@ -156,4 +156,17 @@ class QuestionsStore {
         .map((doc) => QuestionModel.fromFirestore(doc))
         .toList();
   }
+
+  Future<QuestionModel?> getQuestionById(String id) async {
+    try {
+      final doc = await _firestore.collection('questions').doc(id).get();
+      if (doc.exists) {
+        return QuestionModel.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      print("Firestore Query Error: $e");
+      return null;
+    }
+  }
 }

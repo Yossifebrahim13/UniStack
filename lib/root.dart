@@ -1,4 +1,3 @@
-import 'package:UniStack/core/error/error_controller.dart';
 import 'package:UniStack/core/error/error_view.dart';
 import 'package:UniStack/shared/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/features/home/view/home_view.dart';
 import 'package:UniStack/features/questions/view/questions_view.dart';
 import 'package:UniStack/features/myQuestions/view/myQuestions_view.dart';
-import 'package:get/get.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 
 class Root extends StatefulWidget {
   const Root({super.key});
@@ -21,10 +20,10 @@ class _RootState extends State<Root> {
   int currentIndex = 1;
   late final PageController _pageController;
 
-  final List<Widget> screens = const [
-    QuestionsView(),
+  final List<Widget> screens = [
+    const QuestionsView(),
     HomeView(),
-    MyQuestionsView(),
+    const MyQuestionsView(),
   ];
 
   final List<IconData> icons = [
@@ -57,16 +56,28 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<NetworkController>();
     return Scaffold(
       extendBody: true,
-      body: Obx(() {
-        if (controller.isConnected.value) {
-          return IndexedStack(index: currentIndex, children: screens);
-        } else {
-          return const ErrorView();
-        }
-      }),
+      body: OfflineBuilder(
+        connectivityBuilder:
+            (
+              BuildContext context,
+              List<ConnectivityResult> connectivity,
+              Widget child,
+            ) {
+              final bool isNotConnected = connectivity.contains(
+                ConnectivityResult.none,
+              );
+              if (isNotConnected) {
+                return const ErrorView();
+              } else {
+                return IndexedStack(index: currentIndex, children: screens);
+              }
+            },
+        child: Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+      ),
 
       // FAB
       floatingActionButton: currentIndex != 1

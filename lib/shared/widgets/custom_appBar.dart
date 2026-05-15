@@ -1,5 +1,4 @@
 import 'package:UniStack/core/utils/app_colors.dart';
-import 'package:UniStack/core/utils/app_routes.dart';
 import 'package:UniStack/features/auth/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -29,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: AppColors.textPrimary,
                 size: screenWidth * 0.06,
               ),
-              onPressed: () => Get.offNamed(AppRoutes.root),
+              onPressed: () => Get.back(),
             )
           : null,
       title: Padding(
@@ -40,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(screenWidth * 0.2),
               child: Image.asset(
                 "lib/core/assets/img/applogo.jpeg",
                 width: screenWidth * 0.1,

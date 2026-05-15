@@ -99,6 +99,15 @@ class AnswersStore {
         });
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAnswersSnapshot(String questionId) {
+    return _firestore
+        .collection('questions')
+        .doc(questionId)
+        .collection('answers')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
   Future<void> deleteAnswer({
     required String questionId,
     required String answerId,

@@ -13,31 +13,30 @@ import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
-
+  HomeView({super.key});
+  final controller = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     List quickActions = [
       {
         "title": "Profile",
         "icon": Icons.person,
-        "action": () => Get.offAllNamed(AppRoutes.profile),
+        "action": () => Get.toNamed(AppRoutes.profile),
       },
       {
         "title": "Settings",
         "icon": Icons.settings,
-        "action": () => Get.offAllNamed(AppRoutes.settings),
+        "action": () => Get.toNamed(AppRoutes.settings),
       },
       {
         "title": "About",
         "icon": Icons.info,
-        "action": () => Get.offAllNamed(AppRoutes.about),
+        "action": () => Get.toNamed(AppRoutes.about),
       },
     ];
 
     final screenWidth = AppSizes(context).screenWidth;
     final screenHeight = AppSizes(context).screenHeight;
-    final controller = Get.find<HomeController>();
 
     return RefreshIndicator(
       onRefresh: () => controller.getStats(),
@@ -52,7 +51,7 @@ class HomeView extends StatelessWidget {
             Gap(screenHeight * 0.02),
 
             Text(
-              "Hello, ${AuthService.instance.auth.currentUser!.displayName} 👋",
+              "Welcome ${AuthService.instance.auth.currentUser!.displayName} 👋 ",
               style: TextStyle(
                 fontSize: screenWidth * 0.06,
                 fontWeight: FontWeight.bold,
@@ -70,7 +69,7 @@ class HomeView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: buildStatCard(
-                        "Total Points",
+                        "Points",
                         "${controller.points}",
                         "PTS",
                         Icons.wallet,
@@ -82,7 +81,7 @@ class HomeView extends StatelessWidget {
                       child: buildStatCard(
                         "Global Rank",
                         "${controller.rank}",
-                        "RANK",
+                        "Rank",
                         Icons.emoji_events,
                         AppColors.warning,
                       ),

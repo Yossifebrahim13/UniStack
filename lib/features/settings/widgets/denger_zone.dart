@@ -25,9 +25,9 @@ Widget dangerZone(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               "Danger Zone",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Container(
               padding: EdgeInsets.symmetric(
@@ -45,9 +45,9 @@ Widget dangerZone(
 
         Gap(screenHeight * 0.02),
 
-        const Text(
-          "Permanently delete your account and all associated data.",
-          style: TextStyle(color: AppColors.textSecondary),
+        Text(
+          "This action cannot be undone.",
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
 
         Gap(screenHeight * 0.02),
@@ -58,9 +58,9 @@ Widget dangerZone(
             color: AppColors.error.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Text(
-            "Warning: This action is irreversible.",
-            style: TextStyle(color: AppColors.error),
+          child: Text(
+            "This action cannot be undone.",
+            style: const TextStyle(color: AppColors.error),
           ),
         ),
 
@@ -76,9 +76,9 @@ Widget dangerZone(
           onPressed: () {
             _showDeleteDialog(context, screenHeight, screenWidth);
           },
-          child: const Text(
+          child: Text(
             "Delete Account",
-            style: TextStyle(color: AppColors.error),
+            style: const TextStyle(color: AppColors.error),
           ),
         ),
       ],
@@ -103,22 +103,22 @@ void _showDeleteDialog(
             Gap(screenHeight * 0.02),
             Text(
               "Are you sure?",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Gap(screenHeight * 0.02),
             Text(
               "This action cannot be undone.",
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary),
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text(
+            child: Text(
               "Cancel",
-              style: TextStyle(color: AppColors.primary),
+              style: const TextStyle(color: AppColors.primary),
             ),
           ),
           TextButton(
@@ -126,9 +126,9 @@ void _showDeleteDialog(
               AuthService.instance.deleteAccount();
               Get.offAllNamed(AppRoutes.login);
             },
-            child: const Text(
+            child: Text(
               "Delete",
-              style: TextStyle(color: AppColors.error),
+              style: const TextStyle(color: AppColors.error),
             ),
           ),
         ],

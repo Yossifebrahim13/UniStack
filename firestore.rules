@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ================= دالة مساعدة للتحقق من تسجيل الدخول =================
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+   // ================= USERS =================
+match /users/{userId} {
+  allow read: if true;
+  allow create: if request.auth != null && request.auth.uid == userId;
+  allow delete: if request.auth != null && request.auth.uid == userId;
+  allow update: if request.auth != null && (
+    // 1. لو هو صاحب الحساب يعدل براحته
+    request.auth.uid == userId || 
+    // 2. لو يوزر تاني (صاحب السؤال) بيعدل نقاط صاحب الإجابة
+    // أضفنا حقل bestAnswersCount للقائمة المسموح بها
+    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['points', 'bestAnswersCount'])
+  );
+}
+
+    // ================= QUESTIONS =================
+    match /questions/{questionId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+
+      // التعديل: 
+      // 1. صاحب السؤال يقدر يعدل (عنوان، محتوى).
+      // 2. أي يوزر تاني يقدر يحدث "answersCount" فقط لما يضيف إجابة (عشان الـ Batch يشتغل).
+      allow update: if isSignedIn();allow update: if isSignedIn() && (
+  // صاحب السؤال يعدل براحته
+  request.auth.uid == resource.data.userId || 
+  // أي حد تاني يعدل فقط عداد الإجابات (عشان الـ Batch اللي قولنا عليه)
+  request.resource.data.diff(resource.data).affectedKeys().hasOnly(['answersCount'])
+);
+      
+      // الحذف: صاحب السؤال فقط
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+
+      // ================= ANSWERS (Sub-collection) =================
+      match /answers/{answerId} {
+        allow read: if true;
+
+        // الإضافة:
+        // إحنا هنا هنستخدم answerId كـ UID للمستخدم في الكود لاحقاً لضمان إجابة واحدة
+        // لكن حالياً الكود بتاعك بيستخدم .doc() فاضي.. الرولز دي هتسمح بالإنشاء لأي مسجل
+        allow create: if isSignedIn();
+
+        // التعديل:
+        allow update: if isSignedIn() && (
+          // 1. صاحب الإجابة بيعدلها
+          request.auth.uid == resource.data.userId || 
+          // 2. صاحب السؤال بيعمل Accept للإجابة
+          request.auth.uid == get(/databases/$(database)/documents/questions/$(questionId)).data.userId
+        );
+
+        // الحذف: صاحب الإجابة فقط
+        allow delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+      }
+    }
+  }
+}

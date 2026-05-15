@@ -1,4 +1,3 @@
-import 'package:UniStack/features/answers/controllers/answer_controller.dart';
 import 'package:UniStack/features/home/controllers/home_controller.dart';
 import 'package:UniStack/features/myQuestions/controllers/myQuestion_controller.dart';
 import 'package:UniStack/features/questions/controllers/questions_controller.dart';
@@ -10,6 +9,7 @@ class RootBinding extends Bindings {
     Get.lazyPut(() => MyQuestionsController(), fenix: true);
     Get.lazyPut(() => HomeController(), fenix: true);
     Get.lazyPut(() => QuestionsController(), fenix: true);
-    Get.lazyPut(() => AnswerController(), fenix: true);
+    // AnswerController is intentionally NOT registered here.
+    // It is scoped to the /answers route via AnswerBinding.
   }
 }

@@ -14,7 +14,10 @@ class UserStore {
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .get();
-    return userDoc['points'];
+    if (userDoc.exists) {
+      return userDoc['points'] ?? 0;
+    }
+    return 0;
   }
 
   Future<int> getUserCorrectAnswers() async {
@@ -45,7 +48,10 @@ class UserStore {
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .get();
-    return userDoc['questionsCount'];
+    if (userDoc.exists) {
+      return userDoc['questionsCount'] ?? 0;
+    }
+    return 0;
   }
 
   Future<int> getUserAnswersCount() async {
@@ -53,7 +59,10 @@ class UserStore {
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .get();
-    return userDoc['answersCount'];
+    if (userDoc.exists) {
+      return userDoc['answersCount'] ?? 0;
+    }
+    return 0;
   }
 
   Future<void> updatePoints(int points) async {
@@ -78,5 +87,22 @@ class UserStore {
     await _firestore.collection('users').doc(_auth.currentUser!.uid).update({
       'answersCount': answersCount,
     });
+  }
+
+  Future<void> updateUserName(String name) async {
+    final user = _auth.currentUser;
+    await _firestore.collection('users').doc(user!.uid).update({'name': name});
+    await user.updateDisplayName(name);
+
+    await user.reload();
+  }
+
+  Future<void> updateFcmToken(String token) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await _firestore.collection('users').doc(user.uid).set({
+        'fcmToken': token,
+      }, SetOptions(merge: true));
+    }
   }
 }

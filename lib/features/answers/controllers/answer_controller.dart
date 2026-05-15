@@ -1,71 +1,111 @@
+import 'dart:async';
+
 import 'package:UniStack/core/database/answers_store.dart';
+import 'package:UniStack/core/database/questions__store.dart';
 import 'package:UniStack/core/models/answer_model.dart';
+import 'package:UniStack/core/models/question_model.dart';
 import 'package:UniStack/core/utils/app_colors.dart';
 import 'package:UniStack/core/utils/pref_helpers.dart';
-import 'package:get/get.dart';
-import 'package:UniStack/core/models/question_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 
 class AnswerController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final AnswersStore _answersStore = AnswersStore.instance;
 
-  var userId = ''.obs;
+  // ── Reactive state ─────────────────────────────────────────────────────────
+
+  final RxString userId = ''.obs;
+  final RxBool isLoading = false.obs;
+  final RxBool isOwner = false.obs;
 
   final RxList<AnswerModel> answers = <AnswerModel>[].obs;
   final RxList<AnswerModel> bestAnswers = <AnswerModel>[].obs;
 
-  final RxBool isLoading = false.obs;
-  final RxBool isOwner = false.obs;
+  final Rxn<QuestionModel> currentQuestion = Rxn<QuestionModel>();
+
+  // ── Private ────────────────────────────────────────────────────────────────
+
+  StreamSubscription<QuerySnapshot>? _answerSubscription;
 
   @override
   void onInit() {
     super.onInit();
-    loadUserId();
+    _loadUserId();
+
     final args = Get.arguments;
     if (args is QuestionModel) {
+      currentQuestion.value = args;
       getAnswers(args.id);
     } else if (args is String) {
+      _loadQuestionById(args);
       getAnswers(args);
     }
   }
 
-  void loadUserId() async {
+  @override
+  void onClose() {
+    _answerSubscription?.cancel();
+    super.onClose();
+  }
+
+  // ── User ID ────────────────────────────────────────────────────────────────
+
+  Future<void> _loadUserId() async {
     isOwner.value = true;
-
     String storedId = await PrefHelpers.getUserId();
-
     if (storedId.isEmpty && auth.currentUser != null) {
       storedId = auth.currentUser!.uid;
       await PrefHelpers.saveUserId(storedId);
     }
-
     userId.value = storedId;
     isOwner.value = false;
   }
 
-  Future<void> getAnswers(String questionId) async {
+  // ── Fetch question by ID (notification-tap path) ───────────────────────────
+
+  Future<void> _loadQuestionById(String questionId) async {
     try {
-      isLoading.value = true;
-      _answersStore.getAnswers(questionId).listen((answers) {
-        this.answers.assignAll(answers);
-        bestAnswers.assignAll(answers.where((answer) => answer.isAccepted));
-      });
+      final q = await QuestionsStore.instance.getQuestionById(questionId);
+      if (q != null) currentQuestion.value = q;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading.value = false;
+      debugPrint('[AnswerController] Failed to fetch question $questionId: $e');
     }
   }
+
+  Future<void> getAnswers(String questionId) async {
+    isLoading.value = true;
+
+    _answerSubscription?.cancel();
+
+    _answerSubscription = _answersStore
+        .getAnswersSnapshot(questionId)
+        .listen(
+          (snapshot) {
+            final newAnswers = snapshot.docs
+                .map((doc) => AnswerModel.fromFirestore(doc))
+                .toList();
+            answers.assignAll(newAnswers);
+            bestAnswers.assignAll(newAnswers.where((a) => a.isAccepted));
+            isLoading.value = false;
+          },
+          onError: (e) {
+            isLoading.value = false;
+            Get.snackbar('Error', e.toString());
+          },
+        );
+  }
+
+  // ── CRUD ───────────────────────────────────────────────────────────────────
 
   Future<bool> addAnswer({
     required String questionId,
     required String body,
   }) async {
     try {
-      bool alreadyAnswered = answers.any((a) => a.userId == userId.value);
-
-      if (alreadyAnswered) {
+      if (answers.any((a) => a.userId == userId.value)) {
         Get.snackbar(
           'Action Denied',
           'You have already provided an answer to this question.',
@@ -74,7 +114,6 @@ class AnswerController extends GetxController {
         );
         return false;
       }
-
       isLoading.value = true;
       await _answersStore.addAnswer(questionId: questionId, body: body);
       return true;
@@ -112,7 +151,6 @@ class AnswerController extends GetxController {
   }) async {
     try {
       answers.removeWhere((a) => a.id == answerId);
-
       isLoading.value = true;
       await _answersStore.deleteAnswer(
         questionId: questionId,

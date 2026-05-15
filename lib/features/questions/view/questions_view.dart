@@ -97,7 +97,7 @@ class QuestionsView extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return QuestionCard(
                           question: controller.filteredQuestions[index],
-                          onTap: () => Get.offNamed(
+                          onTap: () => Get.toNamed(
                             AppRoutes.answers,
                             arguments: controller.filteredQuestions[index],
                           ),

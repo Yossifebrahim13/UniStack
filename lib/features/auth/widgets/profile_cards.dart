@@ -10,32 +10,64 @@ Widget profileCard({
   required Color color,
 }) {
   return Container(
-    padding: EdgeInsets.symmetric(
-      vertical: screenWidth * 0.03,
-      horizontal: screenWidth * 0.03,
-    ),
+    width: screenWidth * 0.37,
+    padding: EdgeInsets.all(screenWidth * 0.04),
     decoration: BoxDecoration(
-      color: AppColors.card,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(20),
+      gradient: LinearGradient(
+        colors: [color.withOpacity(0.15), AppColors.card],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: color.withOpacity(0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        ),
+      ],
     ),
     child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color),
-        Gap(screenWidth * 0.01),
+        // Floating Icon
+        Container(
+          padding: EdgeInsets.all(screenWidth * 0.025),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.4),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Icon(icon, color: Colors.white, size: screenWidth * 0.06),
+        ),
+
+        Gap(screenWidth * 0.03),
+
+        // Value
         Text(
           value,
           style: TextStyle(
-            fontSize: 30,
+            fontSize: screenWidth * 0.065,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
           ),
         ),
+
+        Gap(screenWidth * 0.01),
+
+        // Title
         Text(
           title,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: screenWidth * 0.038,
+            color: AppColors.textPrimary.withOpacity(0.6),
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
           ),
         ),
       ],
