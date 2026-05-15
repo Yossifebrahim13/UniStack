@@ -55,4 +55,4 @@ app.*.map.json
 # Desktop platforms
 windows/
 linux/
-macos/
+macos/*.hprof
